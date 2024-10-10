@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block title %}Admin{% endblock %} {% block body %}
+<div class="mt-5">
+    <h2 class="text-center">Use this form to submit crisis information, including location and details about the situation. The data will help in organizing and directing aid to those in need.</h2>
+    <form action="/add_crisis_data" method="POST" class="m-5">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="latitude" class="form-label">Latitude</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="latitude" name="latitude" placeholder="Enter latitude" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="longitude" class="form-label">Longitude</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="longitude" name="longitude" placeholder="Enter longitude" required>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="title" class="form-label">Title</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="title" name="title" placeholder="Enter title" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="intensity" class="form-label">Intensity</label>
+                <select class="form-control form-control-lg" id="intensity" style="line-height: 2;" name="intensity" required>
+					<option value="high">High</option>
+					<option value="medium">Medium</option>
+					<option value="low">Low</option>
+				</select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="description" class="form-label">Description</label>
+            <textarea class="form-control form-control-lg" id="description" rows="3" name="description" placeholder="Enter description"></textarea>
+        </div>
+
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg">Add Data</button>
+        </div>
+    </form>
+
+    <div class="m-5">
+        <h2 class="mt-5">User Provided Crisis Tracker</h2>
+        <p>Monitor real-time crisis alerts from around the world.</p>
+        <div id="map2"></div>
+        <script>
+            var map2 = L.map('map2', {
+                minZoom: 2,
+            }).setView([20, 0], 2);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                minZoom: 2,
+            }).addTo(map2);
+
+            function getColor(intensity) {
+                intensity = intensity.toLowerCase().trim();
+                if (intensity === 'high') return 'red';
+                if (intensity === 'medium') return 'yellow';
+                if (intensity === 'low') return 'green';
+                return 'blue';
+            }
+
+            Papa.parse('../static/crisis_user_data.csv', {
+                header: true,
+                download: true,
+                complete: function(results) {
+                    results.data.forEach((crisis) => {
+                        const lat = parseFloat(crisis['Latitude']);
+                        const lon = parseFloat(crisis['Longitude']);
+                        const name = crisis['Title'];
+                        const description = crisis['Description'];
+                        const intensity = crisis['Intensity'];
+
+                        const markerIcon = L.icon({
+                            iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${getColor(intensity)}.png`,
+                            iconSize: [25, 41],
+                            iconAnchor: [12, 41],
+                            popupAnchor: [1, -34],
+                            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+                            shadowSize: [41, 41]
+                        });
+
+                        const marker = L.marker([lat, lon], {
+                            icon: markerIcon
+                        }).addTo(map2);
+                        marker.bindPopup(`<strong>${name}</strong><br>${description}`);
+                    });
+                },
+            });
+        </script>
+    </div>
+</div>
+{% endblock body %}

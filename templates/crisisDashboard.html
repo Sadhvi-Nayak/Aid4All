@@ -1,7 +1,145 @@
 {% extends 'base.html' %} {% block title %}Crisis Dashboard{% endblock %} {% block body %}
-<div class="container mt-3 bluecl">
-    <h1 class="text-center fw-bold mb-5 display-1">
-        Crisis Dashboard
-    </h1>
+<div class="m-5">
+    <h2 class="mt-5">Global Crisis Tracker</h2>
+    <p>Prediction from watsonX</p>
+    <div id="map1"></div>
+    <script>
+        var map1 = L.map('map1', {
+            minZoom: 2,
+        }).setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            minZoom: 2,
+        }).addTo(map1);
+
+        function getColor(intensity) {
+            intensity = intensity.toLowerCase().trim();
+            if (intensity === 'high') return 'red';
+            if (intensity === 'medium') return 'yellow';
+            if (intensity === 'low') return 'green';
+            return 'blue';
+        }
+
+        Papa.parse('../static/watsonx.csv', {
+            header: true,
+            download: true,
+            complete: function(results) {
+                results.data.forEach((crisis) => {
+                    const lat = parseFloat(crisis['Latitude']);
+                    const lon = parseFloat(crisis['Longitude']);
+                    const name = crisis['Title'];
+                    const description = crisis['Description'];
+                    const intensity = crisis['Intensity'].toLowerCase();
+
+                    const markerIcon = L.icon({
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${getColor(intensity)}.png`,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+                        shadowSize: [41, 41]
+                    });
+
+                    const marker = L.marker([lat, lon], {
+                        icon: markerIcon
+                    }).addTo(map1);
+                    marker.bindPopup(`<strong>${name}</strong><br>${description}`);
+                });
+            },
+        });
+    </script>
+
+    <p class="mt-2">Monitor real-time crisis reported by users from around the world.</p>
+
+    <div id="map2"></div>
+    <script>
+        var map2 = L.map('map2', {
+            minZoom: 2,
+        }).setView([20, 0], 2);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            minZoom: 2,
+        }).addTo(map2);
+
+        function getColor(intensity) {
+            intensity = intensity.toLowerCase().trim();
+            if (intensity === 'high') return 'red';
+            if (intensity === 'medium') return 'yellow';
+            if (intensity === 'low') return 'green';
+            return 'blue';
+        }
+
+        Papa.parse('../static/crisis_user_data.csv', {
+            header: true,
+            download: true,
+            complete: function(results) {
+                results.data.forEach((crisis) => {
+                    const lat = parseFloat(crisis['Latitude']);
+                    const lon = parseFloat(crisis['Longitude']);
+                    const name = crisis['Title'];
+                    const description = crisis['Description'];
+                    const intensity = crisis['Intensity'].toLowerCase();
+
+                    const markerIcon = L.icon({
+                        iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${getColor(intensity)}.png`,
+                        iconSize: [25, 41],
+                        iconAnchor: [12, 41],
+                        popupAnchor: [1, -34],
+                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+                        shadowSize: [41, 41]
+                    });
+
+                    const marker = L.marker([lat, lon], {
+                        icon: markerIcon
+                    }).addTo(map2);
+                    marker.bindPopup(`<strong>${name}</strong><br>${description}`);
+                });
+            },
+        });
+    </script>
+
+
+    <h2 class="my-4">Latest Crisis News</h2>
+    <div class="row" id="news-cards"></div>
+    <script>
+        const apiKey = '{{news_api_key}}';
+        const apiUrl = `https://newsapi.org/v2/everything?q=war&apiKey=${apiKey}&pageSize=6`;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch(apiUrl)
+                .then((response) => response.json())
+                .then((data) => {
+                    const newsCards = data.articles
+                        .map((article) => {
+                            const title = article.title;
+                            const description =
+                                article.description || 'No description available.';
+                            const url = article.url;
+                            const imageUrl =
+                                article.urlToImage || 'https://via.placeholder.com/300';
+
+                            return `
+                      <div class="col-md-4 mb-4">
+                          <div class="card news-card">
+                              <img src="${imageUrl}" class="card-img-top" alt="${title}">
+                              <div class="card-body">
+                                  <h5 class="news-card-title">${title}</h5>
+                                  <p class="news-card-text">${description}</p>
+                                  <div class="text-center">
+    <a href="${url}" class="btn btn-primary mt-3" target="_blank">Read More</a></div>
+                              </div>
+                          </div>
+                      </div>
+                  `;
+                        })
+                        .join('');
+
+                    document.getElementById('news-cards').innerHTML = newsCards;
+                })
+                .catch((error) => console.error('Error fetching news:', error));
+        });
+    </script>
 </div>
 {% endblock body %}
