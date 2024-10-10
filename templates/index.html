@@ -1,7 +1,81 @@
 {% extends 'base.html' %} {% block title %}Home Page{% endblock %} {% block body %}
-<div class="container mt-3 bluecl">
-    <h1 class="text-center fw-bold mb-5 display-1">
-        Aid4All
-    </h1>
+<div class="container-fluid mt-3">
+    <div class="row">
+        <div class="col-12 col-md-6">
+            <h1 class="fw-normal mt-5 text-center custom-h1">
+                Empowering Equitable Disaster Relief with AI
+            </h1>
+            <h3 class="text-center mt-3">
+                Real-time access to essential resources for underserved communities during crises.
+            </h3>
+        </div>
+        <div class="col-12 col-md-6">
+            <img class="img-fluid" src="../static/images/cover.png" alt="cop" />
+        </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+        <div class="col-auto">
+            <button class="btn btn-primary btn-lg custom-btn">
+        <span class="train-animation">
+          <a href="/crisisDashboard" class="text-white text-decoration-none"
+            >Explore our Dashboard</a
+          >
+        </span>
+      </button>
+        </div>
+    </div>
+    <div class="container d-flex justify-content-center">
+        <div class="card m-5">
+            <div class="card-body m-2">
+                <h5 class="fw-normal display-6 text-center">About Our Platform</h5>
+                <p class="fs-4 mt-4">
+                    Our AI-powered platform ensures equitable distribution of critical resources like food, water, and medical supplies in times of crisis. By leveraging real-time data, our solution identifies the most impacted areas, connects volunteers and NGOs with those
+                    in need, and tracks supply fulfillment. Our mission is to ensure that no community is left behind when disaster strikes.
+                </p>
+            </div>
+            <img src="../static/images/cover2.jpg" class="card-img-bottom img-fluid" alt="..." />
+        </div>
+    </div>
+    <div class="container mt-2">
+        <h2 class="text-center text-white">How We Help</h2>
+        <div class="row mt-5">
+            <div class="col-md-4 mt-3">
+                <div class="cards rotate-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h5 class="card-title text-center">Crisis Dashboard</h5>
+                        </div>
+                        <div class="card-back">
+                            <p class="card-text">Monitor real-time crisis impact, access AI recommendations, and track available resources.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="cards rotate-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h5 class="card-title text-center">Aid Request</h5>
+                        </div>
+                        <div class="card-back">
+                            <p class="card-text">Submit aid requests directly through our platform for urgent supplies.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4 mt-3">
+                <div class="cards rotate-card">
+                    <div class="card-inner">
+                        <div class="card-front">
+                            <h5 class="card-title text-center">Volunteer & NGO Collaboration</h5>
+                        </div>
+                        <div class="card-back">
+                            <p class="card-text">Easily sign up to volunteer or partner with NGOs to assist affected areas.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock body %}
