@@ -1,7 +1,92 @@
 {% extends 'base.html' %} {% block title %}Volunteer Signup{% endblock %} {% block body %}
-<div class="container mt-3 bluecl">
-    <h1 class="text-center fw-bold mb-5 display-1">
-        Volunteer Signup
+<div class="m-5">
+    <h1 class="text-center">
+        Join our team of dedicated volunteers to help make a difference in the lives of those in need. Sign up now to contribute your time and skills to our community support initiatives.
     </h1>
+    <form action="/volunteer_signup" method="POST" class="mt-5">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="fullName" class="form-label">Full Name</label>
+                <input type="text" class="form-control form-control-lg" id="fullName" style="line-height: 2;" placeholder="Enter your full name" name="name" required />
+            </div>
+            <div class=" col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control form-control-lg" id="email" style="line-height: 2;" placeholder="Enter your email address" name="email" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control form-control-lg" id="phone" style="line-height: 2;" placeholder="Enter your phone number" name="phone" required />
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="dob" class="form-label">Location</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="location" placeholder="Enter your location" name="location" required />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="role" class="form-label">Preferred Volunteer Role</label>
+                <select class="form-select form-control-lg" style="line-height: 2;" id="role" name="role" required>
+          <option value="" disabled selected>Select a role</option>
+          <option value="Event Volunteer">
+            Event Volunteer - Help organize and manage events, interact with the
+            public, and assist with event logistics.
+          </option>
+          <option value="Support Staff">
+            Support Staff - Provide operational support behind the scenes,
+            including logistics and resource management.
+          </option>
+          <option value="Admin Assistance">
+            Administrative Assistance - Assist with office tasks like data
+            entry, email management, and document organization.
+          </option>
+        </select>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="availability" class="form-label">Availability</label>
+                <select class="form-select form-control-lg" style="line-height: 2;" id="availability" name="availability" required>
+          <option value="" disabled selected>Select availability</option>
+          <option value="Weekdays">Weekdays</option>
+          <option value="Weekends">Weekends</option>
+          <option value="Flexible">Flexible</option>
+        </select>
+            </div>
+        </div>
+        <div class="mb-3">
+            <label for="comments" class="form-label">Additional Comments</label>
+            <textarea class="form-control form-control-lg" id="comments" rows="3" name="comments" placeholder="Any special skills or comments?"></textarea>
+        </div>
+        <div class="text-center mt-5">
+            <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+        </div>
+    </form>
+    <h2 class="mt-5 mb-3 text-white">Signed Up Volunteers</h2>
+    <table class="table table-bordered table-striped volunteerTable">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Location</th>
+                <th>Role</th>
+                <th>Availability</th>
+                <th>Comments</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for volunteer in volunteers %}
+            <tr>
+                <td>{{ volunteer.id }}</td>
+                <td>{{ volunteer.name }}</td>
+                <td>{{ volunteer.email }}</td>
+                <td>{{ volunteer.location }}</td>
+                <td>{{ volunteer.role }}</td>
+                <td>{{ volunteer.availability }}</td>
+                <td>{{ volunteer.comments }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
 {% endblock body %}

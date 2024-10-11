@@ -138,6 +138,12 @@ body {
     margin-bottom: 0.5rem;
 }
 
+.volunteerTable tr,
+.volunteerTable th,
+.volunteerTable td {
+    color: white !important;
+}
+
 @media (max-width: 1200px) {
     .custom-h1 {
         font-size: 300%;
