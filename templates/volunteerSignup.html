@@ -62,31 +62,33 @@
         </div>
     </form>
     <h2 class="mt-5 mb-3 text-white">Signed Up Volunteers</h2>
-    <table class="table table-bordered table-striped volunteerTable">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Location</th>
-                <th>Role</th>
-                <th>Availability</th>
-                <th>Comments</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for volunteer in volunteers %}
-            <tr>
-                <td>{{ volunteer.id }}</td>
-                <td>{{ volunteer.name }}</td>
-                <td>{{ volunteer.email }}</td>
-                <td>{{ volunteer.location }}</td>
-                <td>{{ volunteer.role }}</td>
-                <td>{{ volunteer.availability }}</td>
-                <td>{{ volunteer.comments }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped volunteerTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Location</th>
+                    <th>Role</th>
+                    <th>Availability</th>
+                    <th>Comments</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for volunteer in volunteers %}
+                <tr>
+                    <td>{{ volunteer.id }}</td>
+                    <td>{{ volunteer.name }}</td>
+                    <td>{{ volunteer.email }}</td>
+                    <td>{{ volunteer.location }}</td>
+                    <td>{{ volunteer.role }}</td>
+                    <td>{{ volunteer.availability }}</td>
+                    <td>{{ volunteer.comments }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock body %}

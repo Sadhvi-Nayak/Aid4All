@@ -1,7 +1,213 @@
 {% extends 'base.html' %} {% block title %}Request Resources{% endblock %} {% block body %}
-<div class="container mt-3 bluecl">
-    <h1 class="text-center fw-bold mb-5 display-1">
-        Request Resources
-    </h1>
+<div class="m-5">
+    <div class="alert alert-info">
+        <h2 class="alert-heading text-center">Request Resources</h2>
+        <h6 class="text-center">Please fill out the form below to request essential resources such as food, shelter, medical supplies, or financial aid. Our team will review your request and get back to you shortly.</h6>
+    </div>
+
+    <form action="/request_resources" method="POST" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="name" class="form-label">Full Name</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="name" name="name" placeholder="Enter your full name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="email" class="form-label">Email Address</label>
+                <input type="email" class="form-control form-control-lg" style="line-height: 2;" id="email" name="email" placeholder="Enter your email address" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="phone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control form-control-lg" id="phone" style="line-height: 2;" name="phone" placeholder="Enter your phone number" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Resource Type</label>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="resource_food" name="resource_type" value="Food">
+                            <label class="form-check-label custom-label" for="resource_food">Food</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="resource_shelter" name="resource_type" value="Shelter">
+                            <label class="form-check-label custom-label" for="resource_shelter">Shelter</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="resource_medical" name="resource_type" value="Medical Supplies">
+                            <label class="form-check-label custom-label" for="resource_medical">Medical Supplies</label>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-check">
+                            <input class="form-check-input custom-checkbox" type="checkbox" id="resource_financial" name="resource_type" value="Financial Aid">
+                            <label class="form-check-label custom-label" for="resource_financial">Financial Aid</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="location" name="location" placeholder="Enter your location" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="urgency" class="form-label">Urgency Level</label>
+                <select class="form-select form-control-lg" style="line-height: 3;" id="urgency" name="urgency" required>
+                    <option value="" disabled selected>Select urgency level</option>
+                    <option value="Low">Low</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="High">High</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label for="description" class="form-label">Description of Need</label>
+            <textarea class="form-control form-control-lg" id="description" name="description" rows="4" placeholder="Describe the resources you need" required></textarea>
+        </div>
+
+        <div class="text-center mt-4">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Request</button>
+        </div>
+    </form>
+
+    <h3 class="text-white">Available Resources</h3>
+    <div class="row row-cols-1 row-cols-md-2 g-4 mt-1">
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Food & Water</h5>
+                    <p class="card-text">Basics like food supplies, clean drinking water.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Medical Aid</h5>
+                    <p class="card-text">First-aid kits, medications, or health services.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Shelter</h5>
+                    <p class="card-text">Temporary housing, tents, blankets.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Financial Support</h5>
+                    <p class="card-text">Funding for recovery, relocation.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-5">
+        <h3 class="text-white">Emergency Contacts</h3>
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Emergency Hotline</h5>
+                    <p class="card-text text-center">123-456-7890</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Local NGO: Helping Hands</h5>
+                    <p class="card-text text-center">987-654-3210</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title text-center">Government Support</h5>
+                    <p class="card-text text-center">555-555-5555</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion mt-5" id="faqAccordion">
+        <h3 class="text-white">Frequently Asked Questions</h3>
+        <div class="accordion-item mt-4">
+            <h2 class="accordion-header" id="faq1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+					What should I do after submitting a request?
+				</button>
+            </h2>
+            <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="faq1" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    After submitting a request, please wait for our team to reach out to you. You will receive further instructions via email or phone.
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faq2">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+					How long will it take for aid to arrive?
+				</button>
+            </h2>
+            <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="faq2" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    The time it takes for aid to arrive depends on the location and availability of resources. We aim to respond within 24-48 hours.
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="faq3">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+					Can I request multiple resources at once?
+				</button>
+            </h2>
+            <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="faq3" data-bs-parent="#faqAccordion">
+                <div class="accordion-body">
+                    Yes, you can request multiple resources by selecting them in the form. Please specify your exact needs to help us provide the best support.
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="mt-5 mb-3 text-white">Submitted Requests</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped volunteerTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Resource Type</th>
+                    <th>Location</th>
+                    <th>Urgency Level</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for resourcesRequest in resourcesRequests %}
+                <tr>
+                    <td>{{ resourcesRequest.id }}</td>
+                    <td>{{ resourcesRequest.name }}</td>
+                    <td>{{ resourcesRequest.email }}</td>
+                    <td>{{ resourcesRequest.resource_type }}</td>
+                    <td>{{ resourcesRequest.location }}</td>
+                    <td>{{ resourcesRequest.urgency }}</td>
+                    <td>{{ resourcesRequest.description }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </div>
 {% endblock body %}

@@ -47,6 +47,19 @@ class Volunteers(db.Model):
     def __repr__(self):
         return "<Volunteer %r>" % self.email
 
+class ResourceRequests(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(60), unique=True, nullable=False)
+    phone = db.Column(db.String(10), unique=True, nullable=False)
+    resource_type = db.Column(db.String(250), nullable=False)
+    location = db.Column(db.String(50), nullable=False)
+    urgency = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(250), nullable=False)
+
+    def __repr__(self):
+        return "<ResourceRequest %r>" % self.email
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -57,7 +70,8 @@ def crisisDashboard():
 
 @app.route("/requestResources")
 def requestResources():
-    return render_template("requestResources.html")
+	resourcesRequests = ResourceRequests.query.all()
+	return render_template("requestResources.html",resourcesRequests=resourcesRequests)
 
 @app.route("/donateSupport")
 def donateSupport():
@@ -132,6 +146,49 @@ def volunteer_signup():
 		else:
 			flash("Email ID already in use", "error")
 			return redirect(url_for("volunteerSignup"))
+
+@app.route("/request_resources", methods=['POST'])
+def request_resources():
+	if request.method == 'POST':
+		name = request.form['name']
+		email = request.form['email']
+		phone = request.form['phone']
+		resource_type = request.form.getlist('resource_type')
+		location = request.form['location']
+		urgency = request.form['urgency']
+		description = request.form['description']
+        
+		email_check = ResourceRequests.query.filter_by(email=email).first()
+		if not email_check:
+			phone_check = ResourceRequests.query.filter_by(phone=phone).first()
+			if not phone_check:
+				resource_request = ResourceRequests(
+					name=name,
+					email=email,
+					phone=phone,
+					resource_type=', '.join(resource_type),
+					location=location,
+					urgency=urgency,
+					description=description
+				)
+				db.session.add(resource_request)
+				db.session.commit()
+				send_mail(
+					email,
+					"Resource Request Submitted Successfully",
+					"Hi "
+					+ str(name)
+					+ ",\nThank you for your resource request to Aid4All! Our team will review your request and get back to you shortly."
+					+ "\nPlease keep an eye on your email for updates."
+				)
+				flash("Resource request submitted successfully", "success")
+				return redirect(url_for("requestResources"))
+			else:
+				flash("Phone Number already in use", "error")
+				return redirect(url_for("requestResources"))
+		else:
+			flash("Email ID already in use", "error")
+			return redirect(url_for("requestResources"))
 
 if __name__ == '__main__':
 	with app.app_context():
