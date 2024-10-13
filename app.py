@@ -60,6 +60,17 @@ class ResourceRequests(db.Model):
     def __repr__(self):
         return "<ResourceRequest %r>" % self.email
 
+class Donations(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(60), unique=True, nullable=False)
+    phone = db.Column(db.String(10), unique=True, nullable=False)
+    donation_amount = db.Column(db.String(20), nullable=False)
+    payment_method = db.Column(db.String(20), nullable=False)
+
+    def __repr__(self):
+        return "<Donation %r>" % self.email
+
 @app.route("/")
 def home():
     return render_template("index.html")
@@ -75,7 +86,8 @@ def requestResources():
 
 @app.route("/donateSupport")
 def donateSupport():
-    return render_template("donateSupport.html")
+	donations = Donations.query.all()
+	return render_template("donateSupport.html",donations=donations)
 
 @app.route("/volunteerSignup")
 def volunteerSignup():
@@ -189,6 +201,45 @@ def request_resources():
 		else:
 			flash("Email ID already in use", "error")
 			return redirect(url_for("requestResources"))
+
+@app.route("/submit_donation", methods=['POST'])
+def submit_donation():
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        donation_amount = request.form['amount']
+        payment_method = request.form['payment_method']
+
+        email_check = Donations.query.filter_by(email=email).first()
+        if not email_check:
+            phone_check = Donations.query.filter_by(phone=phone).first()
+            if not phone_check:
+                donation = Donations(
+                    name=name,
+                    email=email,
+                    phone=phone,
+                    donation_amount=donation_amount,
+                    payment_method=payment_method,
+                )
+                db.session.add(donation)
+                db.session.commit()
+                send_mail(
+                    email,
+                    "Donation Confirmation",
+                    "Hi "
+                    + str(name)
+                    + ",\nThank you for your generous donation to Aid4All! Your contribution will make a significant impact."
+                    + "\nPlease keep an eye on your email for updates on how your donation is being used."
+                )
+                flash("Donation successful", "success")
+                return redirect(url_for("donateSupport"))
+            else:
+                flash("Phone Number already in use", "error")
+                return redirect(url_for("donateSupport"))
+        else:
+            flash("Email ID already in use", "error")
+            return redirect(url_for("donateSupport"))
 
 if __name__ == '__main__':
 	with app.app_context():

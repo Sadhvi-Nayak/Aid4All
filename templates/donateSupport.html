@@ -1,7 +1,127 @@
 {% extends 'base.html' %} {% block title %}Donate & Support{% endblock %} {% block body %}
-<div class="container mt-3 bluecl">
-    <h1 class="text-center fw-bold mb-5 display-1">
-        Donate & Support
-    </h1>
+<div class="m-5">
+    <div class="alert alert-info">
+        <h2 class="alert-heading text-center">Donate and Support</h2>
+        <h6 class="text-center">Your contribution helps provide essential resources to support relief efforts, including food, medical supplies, and shelter</h6>
+    </div>
+
+    <form action="/submit_donation" method="POST" id="donation-form">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="text" class="form-control form-control-lg" style="line-height: 2;" id="name" name="name" placeholder="Full Name" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="email" class="form-control form-control-lg" id="email" style="line-height: 2;" name="email" placeholder="Email Address" required>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <input type="tel" class="form-control form-control-lg" id="phone" style="line-height: 2;" name="phone" placeholder="Phone Number" required>
+            </div>
+            <div class="col-md-6 mb-3">
+                <input type="number" class="form-control form-control-lg" id="amount" style="line-height: 2;" name="amount" placeholder="Donation Amount" required>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            <div class="col-md-6 mb-3">
+                <select class="form-select form-control-lg" style="line-height: 3;" id="payment_method" name="payment_method" required>
+                    <option value="" disabled selected>Payment Method</option>
+                    <option value="Credit/Debit Card">Credit/Debit Card</option>
+                    <option value="PayPal">PayPal</option>
+                </select>
+            </div>
+        </div>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-lg">Submit Donation</button>
+        </div>
+    </form>
+
+    <h3 class="text-center mt-5 mb-3 text-white">Where Your Donations Go</h3>
+    <div class="row">
+        <div class="col-md-4 mt-3">
+            <div class="card text-center" style="height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-utensils fa-3x mb-3"></i>
+                    <h5 class="card-title">$10 Donation</h5>
+                    <p class="card-text">Provides meals for a family in need.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-3">
+            <div class="card text-center" style="height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-medkit fa-3x mb-3"></i>
+                    <h5 class="card-title">$50 Donation</h5>
+                    <p class="card-text">Supplies a week's worth of medical supplies.</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mt-3">
+            <div class="card text-center" style="height: 200px;">
+                <div class="card-body d-flex flex-column justify-content-center">
+                    <i class="fas fa-home fa-3x mb-3"></i>
+                    <h5 class="card-title">$100 Donation</h5>
+                    <p class="card-text">Provides temporary shelter for displaced families.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="text-center mt-5 mb-5 text-white">Testimonials</h2>
+    <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="3000">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <div class="testimonial-content text-center">
+                    <p>"Aid4All has changed my life. The support I received during my time of need was incredible!"</p>
+                    <h5>- John Doe</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="testimonial-content text-center">
+                    <p>"Thanks to Aid4All, I received medical supplies just when I needed them. Thank you for your kindness!"</p>
+                    <h5>- Jane Smith</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="testimonial-content text-center">
+                    <p>"The volunteers at Aid4All are amazing! They helped me find shelter during a tough time."</p>
+                    <h5>- Mark Johnson</h5>
+                </div>
+            </div>
+            <div class="carousel-item">
+                <div class="testimonial-content text-center">
+                    <p>"I can’t express how grateful I am for the assistance I received. It made a huge difference!"</p>
+                    <h5>- Emily Davis</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+    <h2 class="mt-5 mb-3 text-white">Thanks to our Donors</h2>
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped volunteerTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Donation Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in donations %}
+                <tr>
+                    <td>{{ donation.id }}</td>
+                    <td>{{ donation.name }}</td>
+                    <td>{{ donation.email }}</td>
+                    <td>{{ donation.phone }}</td>
+                    <td>{{ donation.donation_amount }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
 </div>
+
 {% endblock body %}
