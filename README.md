@@ -4,7 +4,7 @@ AI-powered platform for real-time, equitable disaster resource management.
 Our team aimed to address the inefficiencies and inequities in disaster relief efforts. Many affected communities struggle with delayed or unequal access to essential resources like food, shelter, and medical aid. Aid4All seeks to provide a fair, real-time solution by optimizing resource distribution, improving coordination, and ensuring that help reaches those who need it most.
 
 - [Project summary](#project-summary)
-- [Technology implementation](#technologies-used)
+- [Technology implementation](#technology-implementation)
 - [Solution architecture](#solution-architecture)
 - [Project development roadmap](#project-development-roadmap)
 - [Steps to setup the project](#steps-to-setup)
@@ -42,7 +42,7 @@ Disaster relief is often hampered by delays, unequal distribution of resources, 
 #### Impact:
 With Aid4All, disaster relief efforts become more organized, transparent, and equitable. The platform ensures that resources reach the most vulnerable communities quickly and efficiently while providing real-time information and predictive insights. Aid4All empowers individuals, organizations, and volunteers to collaborate in a more effective way, ultimately saving lives and accelerating recovery efforts.
 
-## Technologies Used:
+## Technology Implementation
 Aid4All uses a robust tech stack to power its platform:
 - **Frontend**: HTML, CSS, and Bootstrap for a responsive, user-friendly interface.
 - **Backend**: Python Flask for handling user interactions, data processing, and resource management.
