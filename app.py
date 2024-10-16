@@ -1,6 +1,8 @@
-from flask import Flask,redirect,render_template,url_for, request, flash
+from flask import Flask,redirect,render_template,url_for, request, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 import os, csv, smtplib
+import re
+import requests
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = os.urandom(16)
@@ -240,6 +242,134 @@ def submit_donation():
         else:
             flash("Email ID already in use", "error")
             return redirect(url_for("donateSupport"))
+
+
+ 
+ 
+# Load your API token from an environment variable
+API_TOKEN = os.getenv('WATSONX_ACCESS_TOKEN')
+WATSONX_API_URL = "https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
+
+@app.route('/disaster-info', methods=['POST'])
+def get_disaster_info():
+    input_data = request.json
+
+    # Check if required fields are present
+    if 'disaster_type' not in input_data or 'location' not in input_data:
+        return jsonify({'error': 'Please provide both disaster_type and location.'}), 400
+
+    # Construct the request body for WatsonX
+    body = {
+        "input": f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe. \nYour answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don'\''t know the answer to a question, please don'\''t share false information.<|eot_id|><|start_header_id|>user<|end_header_id|>\n\nI need a list of coordinates showing disaster-prone areas for {input_data['disaster_type']} in {input_data['location']}. The list should be sorted based on the intensity of damage to property and life, from high to low. Please provide the coordinates in a format suitable for displaying on a map(latitude and longitude). The intensity levels should reflect historical data, risk factors, and impact on both property and life in the region. The output should always have the following format :\n\nArea name\n\nLatitude:\n\nLongitude:\n\n(These should be as accurate as possible (E.g. - 9.9391°N, 76.5214°E , etc)\n\nIntensity of risk: (Very high, High, Moderate, Low)\n\nReason: Brief reason for the risk level, considering local topography, population density, infrastructure vulnerability and historical occurences (1 linne decription).\n\nThe above details should be added one after the other following the same formate without any other headers.Ensure that the data is relevent, detailed, and accurate for mapping purposes.<|eot_id|><|start_header_id|>assistant<|end_header_id|>",
+        "parameters": {
+            "decoding_method": "greedy",
+            "max_new_tokens": 200,
+            "repetition_penalty": 1
+        },
+        "model_id": "meta-llama/llama-3-405b-instruct",
+        "project_id": "16f49676-9e61-4d0e-857f-c264130446ab",
+        "moderations": {
+            "hap": {
+                "input": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                },
+                "output": {
+                    "enabled": True,
+                    "threshold": 0.5,
+                    "mask": {
+                        "remove_entity_value": True
+                    }
+                }
+            }
+        }
+    }
+
+    # Set the headers for the API request
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {API_TOKEN}"
+    }
+
+    # Make the POST request to WatsonX API
+    response = requests.post(WATSONX_API_URL, headers=headers, json=body)
+
+    # Check for errors in the response
+    if response.status_code != 200:
+        return jsonify({'error': response.json()}), response.status_code
+
+    results = response.json().get("results", [])
+    
+    # Log the results for debugging
+    print("Results from API:", results)
+
+    # Ensure there are results to process
+    if not results:
+        return jsonify({'error': 'No results generated from the API.'}), 500
+
+    # Extract the generated text
+    generated_text = results[0].get("generated_text", "")
+    
+    # Use regex to extract latitude, longitude, risk factors, titles, and descriptions
+    regions = re.findall(r'\*\*(.*?)\*\*', generated_text)
+    latitudes = re.findall(r'(?:.*?Latitude:\s*([0-9\.]+)°[NS])', generated_text)
+    longitudes = re.findall(r'(?:.\s*Longitude:\s*([0-9\.]+)°[EW])', generated_text)
+    intensities = re.findall(r'(?:.*?Intensity of risk:\s*(.*))', generated_text)
+    reasons = re.findall(r'(?:.*?Reason:\s*(.+?)(?:\n|$))?', generated_text)
+    descriptions = [item for item in reasons if item != '']
+
+    min_length = min(len(regions),len(latitudes),len(longitudes), len(intensities), len(descriptions))    
+    regions = regions[:min_length]
+    latitudes = latitudes[:min_length]
+    longitudes = longitudes[:min_length]
+    intensities = intensities[:min_length]
+    descriptions = descriptions[:min_length]    
+
+    if not regions or not latitudes or not longitudes:
+        flash("Something went wrong, Please try again!", "danger")
+        return redirect("/admin")
+
+    csv_file_path = 'static/crisis_user_data_v2.csv'    
+    with open(csv_file_path, mode='w', newline='') as file:
+        writer = csv.writer(file)
+        writer.writerow(['Region','Latitude','Longitude','Intensity','Description'])
+        for i in range(len(regions)):
+    	    writer.writerow([regions[i], latitudes[i], longitudes[i], intensities[i], descriptions[i]])    
+    flash("Data added successfully!", "success")
+
+    return redirect("/admin")
+    # coordinates = re.findall(
+    #     r'\d+\.\s+\*\*\s*(.*?)\s*\*\s*Latitude:\s*([\d°\s\.\-NSEW]+)\s*\*\s*Longitude:\s*([\d°\s\.\-NSEW]+)\s*\*\s*Intensity of risk:\s*(Very High|High|Moderate|Low)\s*\*\s*Brief description:\s*(.*?)(?=\n\d+\.\s|\Z)',
+    #     generated_text
+    # )
+
+    
+    # print(coordinates)
+
+    # # Prepare data for CSV
+    # csv_data = []
+    # for title, lat, lon, risk, description in coordinates:
+    #     csv_data.append([lat.strip(), lon.strip(), title.strip(), description.strip(), risk.strip()])
+
+    # # Write to CSV file
+    # with open('crisis_user_data.csv', 'a', newline='') as csvfile:
+    #     csv_writer = csv.writer(csvfile)
+    #     # Write header only if file is new
+    #     if csvfile.tell() == 0:
+    #         csv_writer.writerow(['Latitude', 'Longitude', 'Title', 'Description', 'Intensity'])
+    #     csv_writer.writerows(csv_data)
+
+    # Return the response
+    # return jsonify({
+    #     'input': input_data,
+    #     'output': csv_data  # Include the extracted coordinates
+    # })
+
+
 
 if __name__ == '__main__':
 	with app.app_context():

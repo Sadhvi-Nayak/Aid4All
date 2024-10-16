@@ -2,6 +2,41 @@
 <div class="m-5">
     <h2 class="mt-5">Global Crisis Tracker</h2>
     <p>Prediction from watsonX</p>
+    <div>
+        <h1>Disaster Information Form</h1>
+        <form id="disasterForm">
+            <label for="disasterType">Disaster Type:</label>
+            <input type="text" id="disasterType" name="disasterType" required>
+            <br>
+            <label for="location">Location:</label>
+            <input type="text" id="location" name="location" required>
+            <br>
+            <button type="submit">Submit</button>
+        </form>
+        <pre id="responseOutput"></pre>
+
+        <script>
+            document.getElementById('disasterForm').onsubmit = async function (e) {
+                e.preventDefault();
+                const disasterType = document.getElementById('disasterType').value;
+                const location = document.getElementById('location').value;
+
+                const response = await fetch('/disaster-info', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        disaster_type: disasterType,
+                        location: location,
+                    }),
+                });
+
+                const result = await response.json();
+            };
+        </script>
+    </div>
+    <button></button>
     <div id="map1"></div>
     <script>
         var map1 = L.map('map1', {
@@ -15,20 +50,20 @@
 
         function getColor(intensity) {
             intensity = intensity.toLowerCase().trim();
-            if (intensity === 'high') return 'red';
+            if (intensity === 'very high' || intensity == 'high') return 'red';
             if (intensity === 'medium') return 'yellow';
             if (intensity === 'low') return 'green';
             return 'blue';
         }
 
-        Papa.parse('../static/watsonx.csv', {
+        Papa.parse('../static/crisis_user_data_v2.csv', {
             header: true,
             download: true,
-            complete: function(results) {
+            complete: function (results) {
                 results.data.forEach((crisis) => {
                     const lat = parseFloat(crisis['Latitude']);
                     const lon = parseFloat(crisis['Longitude']);
-                    const name = crisis['Title'];
+                    const name = crisis['Region'];
                     const description = crisis['Description'];
                     const intensity = crisis['Intensity'].toLowerCase();
 
@@ -74,7 +109,7 @@
         Papa.parse('../static/crisis_user_data.csv', {
             header: true,
             download: true,
-            complete: function(results) {
+            complete: function (results) {
                 results.data.forEach((crisis) => {
                     const lat = parseFloat(crisis['Latitude']);
                     const lon = parseFloat(crisis['Longitude']);
@@ -107,7 +142,7 @@
         const apiKey = '{{news_api_key}}';
         const apiUrl = `https://newsapi.org/v2/everything?q=war&apiKey=${apiKey}&pageSize=6`;
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             fetch(apiUrl)
                 .then((response) => response.json())
                 .then((data) => {
