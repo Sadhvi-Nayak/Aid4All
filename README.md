@@ -7,14 +7,32 @@ AI-powered platform for real-time, equitable disaster resource management.
 Our team aimed to address the inefficiencies and inequities in disaster relief efforts. Many affected communities struggle with delayed or unequal access to essential resources like food, shelter, and medical aid. Aid4All seeks to provide a fair, real-time solution by optimizing resource distribution, improving coordination, and ensuring that help reaches those who need it most.  
 <br/><br/>
 
-- [Project summary](#project-summary)
-- [Technology implementation](#technology-implementation)
-- [Solution architecture](#solution-architecture)
-- [Project development roadmap](#project-development-roadmap)
-- [Presentation Materials](#presentation-materials)
-- [Steps to setup the project](#steps-to-setup)
-- [Actions that can be performed](#actions-that-can-be-performed)
-- [Snapshots](#snapshots)
+- [Aid4All](#aid4all)
+  - [Project Summary](#project-summary)
+    - [Aid4All - An AI-Powered Disaster Relief Platform](#aid4all---an-ai-powered-disaster-relief-platform)
+      - [Key Features:](#key-features)
+      - [Impact:](#impact)
+  - [Technology Implementation](#technology-implementation)
+  - [Solution Architecture](#solution-architecture)
+  - [Project development roadmap](#project-development-roadmap)
+  - [Presentation Materials](#presentation-materials)
+  - [Steps to setup](#steps-to-setup)
+  - [Mail Auth](#mail-auth)
+  - [Watsonx Auth](#watsonx-auth)
+  - [Actions that can be performed](#actions-that-can-be-performed)
+    - [Crisis Dashboard](#crisis-dashboard)
+    - [Admin Page](#admin-page)
+    - [Resource Request Page](#resource-request-page)
+    - [Volunteer Signup Page](#volunteer-signup-page)
+    - [Supply Management](#supply-management)
+  - [Snapshots](#snapshots)
+    - [Home Page](#home-page)
+    - [Crisis Dashboard](#crisis-dashboard-1)
+    - [Admin Page](#admin-page-1)
+    - [Resources Request Page](#resources-request-page)
+    - [Donate \& Support](#donate--support)
+    - [Volunteer Signup](#volunteer-signup)
+    - [Supply Management](#supply-management-1)
 
 
 ## Project Summary
@@ -93,6 +111,15 @@ To set up the app password for the Gmail ID you will be used for sending emails:
 3. Enter the app name you wish and a app password will be created. You have to use this as the secret key and paste it in the .env file.
 4. Yea! You are all set to send alerts using the mailing services.
 
+## Watsonx Auth
+To Configure the watsonx prompt lab and authenticate.
+1. Create the project in the watsonx dataplatform(https://dataplatform.cloud.ibm.com/wx/prompts)
+2. Create the API key in same the project created.
+3. Generate the token using this API key, use the following command.  
+``curl -X POST "https://iam.cloud.ibm.com/identity/token" --header 'Content-Type: application/x-www-form-urlencoded' --header 'Accept: application/json' --data-urlencode 'grant_type=urn:ibm:params:oauth:grant-type:apikey' --data-urlencode 'apikey=<API_KEY>``
+4. Add this api token in the `.env` file.
+5. In app.py update the `project_id` in the request body.
+ 
 ## Actions that can be performed
 ### Crisis Dashboard
  - Users can input disaster type and location to receive AI-based predictions on severity.
