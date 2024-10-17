@@ -10,8 +10,8 @@ Our team aimed to address the inefficiencies and inequities in disaster relief e
 - [Aid4All](#aid4all)
   - [Project Summary](#project-summary)
     - [Aid4All - An AI-Powered Disaster Relief Platform](#aid4all---an-ai-powered-disaster-relief-platform)
-      - [Key Features:](#key-features)
-      - [Impact:](#impact)
+      - [Key Features](#key-features)
+      - [Impact](#impact)
   - [Technology Implementation](#technology-implementation)
   - [Solution Architecture](#solution-architecture)
   - [Project development roadmap](#project-development-roadmap)
@@ -43,7 +43,7 @@ Disaster relief is often hampered by delays, unequal distribution of resources, 
 
 **Aid4All** is our solution to these challenges, leveraging AI to ensure equitable, real-time access to disaster relief resources. Built using a combination of HTML, CSS, and Bootstrap for the frontend, Python Flask for the backend, and Watsonx AI for predictive capabilities, Aid4All is a comprehensive platform designed to streamline relief operations and ensure that no community is left behind during a disaster.
 
-#### Key Features:
+#### Key Features
 
 1. **Crisis Dashboard with AI Predictions**
    Aid4All features a dynamic crisis dashboard that enables users to select ongoing or upcoming natural calamities, such as floods or wildfires, and view real-time data. Watsonx AI powers predictive models that analyze weather patterns, historical data, and current conditions to forecast the severity and potential impact of disasters on specific locations. This feature helps both users and administrators anticipate and prepare for crises in advance.
@@ -63,7 +63,7 @@ Disaster relief is often hampered by delays, unequal distribution of resources, 
 6. **Real-Time Updates and External Data Integration**
    Aid4All integrates with external APIs, such as news APIs and government data sources, to provide real-time updates on disaster conditions. Users can stay informed about the latest developments and receive alerts about any changes in their area. This real-time data helps improve decision-making and ensures that relief efforts are aligned with current needs.
 
-#### Impact:
+#### Impact
 With Aid4All, disaster relief efforts become more organized, transparent, and equitable. The platform ensures that resources reach the most vulnerable communities quickly and efficiently while providing real-time information and predictive insights. Aid4All empowers individuals, organizations, and volunteers to collaborate in a more effective way, ultimately saving lives and accelerating recovery efforts.
 
 ## Technology Implementation
@@ -98,8 +98,8 @@ PPT Presentation: [View here](https://www.canva.com/design/DAGTwuye_ik/j8FunoU9K
 NEWS_API_KEY="" (Get the API Key from https://newsapi.org/docs/endpoints/sources)
 EMAIL="" (Email ID from which you want to send the mails)
 SECRET_KEY="" (Steps to get this is mentioned below)
-WATSONX_ACCESS_TOKEN=""
-WATSONX_API_URL=""
+WATSONX_ACCESS_TOKEN="" (Steps to get this is mentioned below)
+WATSONX_API_URL="https://us-south.ml.cloud.ibm.com/ml/v1/text/generation?version=2023-05-29"
 ```
 - Now you are ready to run the application. Type 'py app.py' in the terminal and hit enter.
 - A link like http://127.0.0.1:5000/ will pop up in the terminal. Press Ctrl and click on the link to open it in the browser to see the landing page of the application.
